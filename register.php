@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     'required' => ['name', 'email', 'password'],
     'email' => ['email'],
     'lengthMin' => [
-      ['password', 60]
+      ['password', 6]
     ],
     'lengthMax' => [
       ['name', 100],
@@ -18,7 +18,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ]
   ]);
   if ($validator->validate()) {
-    echo 'OK';
+    if (register($data)) {
+      redirect('login.php');
+    }
   } else {
     dump($validator->errors());
   }
