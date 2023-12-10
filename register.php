@@ -1,4 +1,6 @@
 <?php
+session_start();
+
 require_once __DIR__ . '/configs/db.php';
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/functions/helpers.php';
@@ -22,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       redirect('login.php');
     }
   } else {
-    dump($validator->errors());
+    $_SESSION['errors'] = get_errors($validator->errors());
   }
 }
 ?>
@@ -34,10 +36,17 @@ require_once __DIR__ . '/view/templates/header.php';
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-6 offset-md-3 mb-3">
+    <?php if (isset($_SESSION['errors'])): ?>
       <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>ERROR!</strong>
+        <strong>
+          <?php
+          echo $_SESSION['errors'];
+          unset($_SESSION['errors']);
+          ?>
+        </strong>
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
+      <?php endif; ?>
     </div>
   </div>
   <div class="row">

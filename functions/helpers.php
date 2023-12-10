@@ -19,9 +19,16 @@ function load(array $fillable, $post = true): array
   return $data;
 }
 
-function getErrors(array $errors): string
+function get_errors(array $errors): string
 {
-  
+  $html = '<ul class="list-unstyled">';
+  foreach ($errors as $error_group) {
+    foreach ($error_group as $error) {
+      $html .= "<li>{$error}</li>";
+    }
+  }
+  $html .= '</ul>';
+  return $html;
 }
 
 function redirect(string $url = ''): never
