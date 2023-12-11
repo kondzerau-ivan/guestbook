@@ -1,9 +1,7 @@
 <?php
-session_start();
+require_once __DIR__ . '/configs/settings.php';
 
-require_once __DIR__ . '/configs/db.php';
-require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/functions/helpers.php';
+$title = 'Register';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $data = load(['name', 'email', 'password']);
@@ -27,51 +25,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $_SESSION['errors'] = get_errors($validator->errors());
   }
 }
-?>
 
-<?php
-require_once __DIR__ . '/view/templates/header.php';
-?>
-
-<div class="container mt-5">
-  <div class="row">
-    <div class="col-md-6 offset-md-3 mb-3">
-    <?php if (isset($_SESSION['errors'])): ?>
-      <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>
-          <?php
-          echo $_SESSION['errors'];
-          unset($_SESSION['errors']);
-          ?>
-        </strong>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      </div>
-      <?php endif; ?>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-md-6 offset-md-3">
-      <form action="" method="post">
-        <div class="form-floating mb-3">
-          <input type="text" class="form-control" id="name" name="name" placeholder="Your name" value="<?= old('name') ?>">
-          <label for="name">Name</label>
-        </div>
-        <div class="form-floating mb-3">
-          <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" value="<?= old('email') ?>">
-          <label for="email">Email</label>
-        </div>
-        <div class="form-floating">
-          <input type="password" class="form-control" id="password" name="password" placeholder="Password" value="<?= old('password') ?>">
-          <label for="password">Password</label>
-        </div>
-        <button type="submit" class="btn btn-primary mt-3">Register</button>
-      </form>
-    </div>
-  </div>
-</div>
-
-
-
-<?php
-require_once __DIR__ . '/view/templates/footer.php';
-?>
+require_once __DIR__ . '/view/templates/register.tpl.php';

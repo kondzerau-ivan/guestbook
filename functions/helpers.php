@@ -37,7 +37,7 @@ function redirect(string $url = ''): never
   exit();
 }
 
-function htmlsc(string $s):string
+function htmlsc(string $s): string
 {
   return htmlspecialchars($s, ENT_QUOTES);
 }
@@ -62,5 +62,28 @@ function register(array $data): bool
   $stmt = $dbh->prepare("INSERT INTO `users` (name, email, password) VALUES (:name, :email, :password)");
   $stmt->execute($data);
   $_SESSION['success'] = 'You have successfully registered!';
+  return true;
+}
+
+function login(array $data): bool
+{
+  global $dbh;
+  $stmt = $dbh->prepare("SELECT * FROM `users` WHERE email = ?");
+  $stmt->execute([$data['email']]);
+  if($row = $stmt->fetch()) {
+    if (!password_verify($data['password'], $row['password'])) {
+      $_SESSION['errors'] = 'Wrong email or password!';
+      return false;
+    }
+  } else {
+    $_SESSION['errors'] = 'Wrong email or password!';
+      return false;
+  }
+
+  foreach ($row as $key => $value) {
+    if ($key != 'password') {
+      $_SESSION['user'][$key] = $value;
+    }
+  }
   return true;
 }
