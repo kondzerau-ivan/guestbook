@@ -28,14 +28,16 @@ require_once __DIR__ . '/header.tpl.php';
         </div>
       <?php endif; ?>
     </div>
-    <form action="" class="mb-5">
-      <div class="form-floating mb-3">
-        <textarea class="form-control" placeholder="Leave a comment here" id="message" style="height: 100px;"></textarea>
-        <label for="message">Comments</label>
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
-    <hr class="mb-5">
+    <?php if (checkAuth()) : ?>
+      <form action="" class="mb-5" method="post">
+        <div class="form-floating mb-3">
+          <textarea name="message" class="form-control" placeholder="Leave a comment here" id="message" style="height: 100px;"></textarea>
+          <label for="message">Comments</label>
+        </div>
+        <button name="send-message" type="submit" class="btn btn-primary">Submit</button>
+      </form>
+      <hr class="mb-5">
+    <?php endif; ?>
   </div>
   <div class="row">
     <div class="col-12">
@@ -46,47 +48,24 @@ require_once __DIR__ . '/header.tpl.php';
             <p class="message-created">2023-11-20 12:10</p>
           </div>
           <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <div class="card-actions mt-3">
-            <ul class="list-group list-group-horizontal mb-3">
-              <li class="list-group-item"><a href="#" class="action">Disable</a></li>
-              <li class="list-group-item"><a href="#" class="action">Approve</a></li>
-              <li class="list-group-item"><a href="#collapse-1" class="action" data-bs-toggle="collapse">Edit</a></li>
-            </ul>
-            <div class="collapse" id="collapse-1">
-              <form action="">
-                <div class="form-floating mb-3">
-                  <textarea class="form-control" placeholder="Leave a comment here" id="message-1" style="height: 100px;"></textarea>
-                  <label for="message-1">Comments</label>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-              </form>
+          <?php if (checkAdmin()) : ?>
+            <div class="card-actions mt-3">
+              <ul class="list-group list-group-horizontal mb-3">
+                <li class="list-group-item"><a href="#" class="action">Disable</a></li>
+                <li class="list-group-item"><a href="#" class="action">Approve</a></li>
+                <li class="list-group-item"><a href="#collapse-1" class="action" data-bs-toggle="collapse">Edit</a></li>
+              </ul>
+              <div class="collapse" id="collapse-1">
+                <form action="">
+                  <div class="form-floating mb-3">
+                    <textarea class="form-control" placeholder="Leave a comment here" id="message-1" style="height: 100px;"></textarea>
+                    <label for="message-1">Comments</label>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-      <div class="card mb-3">
-        <div class="card-body">
-          <div class="d-flex justify-content-between">
-            <h5 class="card-title">User 2</h5>
-            <p class="message-created">2023-11-20 12:10</p>
-          </div>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <div class="card-actions mt-3">
-            <ul class="list-group list-group-horizontal mb-3">
-              <li class="list-group-item"><a href="#" class="action">Disable</a></li>
-              <li class="list-group-item"><a href="#" class="action">Approve</a></li>
-              <li class="list-group-item"><a href="#collapse-2" class="action" data-bs-toggle="collapse">Edit</a></li>
-            </ul>
-            <div class="collapse" id="collapse-2">
-              <form action="">
-                <div class="form-floating mb-3">
-                  <textarea class="form-control" placeholder="Leave a comment here" id="message-2" style="height: 100px;"></textarea>
-                  <label for="message-2">Comments</label>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-              </form>
-            </div>
-          </div>
+          <?php endif; ?>
         </div>
       </div>
     </div>

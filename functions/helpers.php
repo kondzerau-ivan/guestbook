@@ -70,14 +70,14 @@ function login(array $data): bool
   global $dbh;
   $stmt = $dbh->prepare("SELECT * FROM `users` WHERE email = ?");
   $stmt->execute([$data['email']]);
-  if($row = $stmt->fetch()) {
+  if ($row = $stmt->fetch()) {
     if (!password_verify($data['password'], $row['password'])) {
       $_SESSION['errors'] = 'Wrong email or password!';
       return false;
     }
   } else {
     $_SESSION['errors'] = 'Wrong email or password!';
-      return false;
+    return false;
   }
 
   foreach ($row as $key => $value) {
@@ -85,5 +85,29 @@ function login(array $data): bool
       $_SESSION['user'][$key] = $value;
     }
   }
+  return true;
+}
+
+function checkAuth(): bool
+{
+  return isset($_SESSION['user']);
+}
+
+function checkAdmin(): bool
+{
+  return isset($_SESSION['user']) && $_SESSION['user']['role'] == 2;
+}
+
+function saveMessage(array $data): bool
+{
+  global $dbh;
+  if (!checkAuth()) {
+    $_SESSION['errors'] = 'Login is required';
+    return false;
+  }
+
+  $stmt = $dbh->prepare("INSERT INTO messages (user_id, text) VALUES (?, ?)");
+  $stmt->execute([$_SESSION['user']['id'], $data['message']]);
+  $_SESSION['success'] = 'Message successfully added!';
   return true;
 }

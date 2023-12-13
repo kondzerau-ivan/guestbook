@@ -1,3 +1,10 @@
+<?php
+if (isset($_GET['do']) && $_GET['do'] == 'logout') {
+  unset($_SESSION['user']);
+  redirect('login.php');
+}
+?>
+
 <!doctype html>
 <html lang="en">
 
@@ -18,20 +25,24 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link" href="register.php">Register</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="login.php">Login</a>
-          </li>
+          <?php if (!checkAuth()) : ?>
+            <li class="nav-item">
+              <a class="nav-link" href="register.php">Register</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="login.php">Login</a>
+            </li>
+          <?php else: ?>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              Hello, User
+              Hello, <?= $_SESSION['user']['name'] ?>
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">LogOut</a></li>
+              <li><a class="dropdown-item" href="?do=logout">Logout</a></li>
             </ul>
           </li>
+          <?php endif; ?>
+
         </ul>
       </div>
     </div>

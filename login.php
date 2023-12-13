@@ -1,6 +1,10 @@
 <?php
 require_once __DIR__ . '/configs/settings.php';
 
+if (checkAuth()) {
+  redirect('index.php');
+}
+
 $title = 'Login';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
