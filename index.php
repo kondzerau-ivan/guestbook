@@ -22,4 +22,6 @@ if (isset($_POST['send-message'])) {
   }
 }
 
+$messages = getMessage();
+
 require_once __DIR__ . '/view/templates/home.tpl.php';

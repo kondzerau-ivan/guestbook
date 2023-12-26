@@ -39,38 +39,48 @@ require_once __DIR__ . '/header.tpl.php';
       <hr class="mb-5">
     <?php endif; ?>
   </div>
-  <div class="row">
+
+  <div class="row row-card">
     <div class="col-12">
-      <div class="card mb-3">
-        <div class="card-body">
-          <div class="d-flex justify-content-between">
-            <h5 class="card-title">User 1</h5>
-            <p class="message-created">2023-11-20 12:10</p>
-          </div>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <?php if (checkAdmin()) : ?>
-            <div class="card-actions mt-3">
-              <ul class="list-group list-group-horizontal mb-3">
-                <li class="list-group-item"><a href="#" class="action">Disable</a></li>
-                <li class="list-group-item"><a href="#" class="action">Approve</a></li>
-                <li class="list-group-item"><a href="#collapse-1" class="action" data-bs-toggle="collapse">Edit</a></li>
-              </ul>
-              <div class="collapse" id="collapse-1">
-                <form action="">
-                  <div class="form-floating mb-3">
-                    <textarea class="form-control" placeholder="Leave a comment here" id="message-1" style="height: 100px;"></textarea>
-                    <label for="message-1">Comments</label>
-                  </div>
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+      <?php if (!empty($messages)) : ?>
+        <?php foreach ($messages as $message) : ?>
+          <div class="card mb-5 <?= !$message['status'] ? 'border-danger' : '' ?>">
+            <div class="card-body">
+              <div class="d-flex justify-content-between">
+                <h5 class="card-title">User ID: <?= $message['user_id'] ?></h5>
+                <p class="message-created"><?= $message['created_at'] ?></p>
               </div>
+              <p class="card-text"><?= nl2br(htmlsc($message['text'])) ?></p>
+              <?php if (checkAdmin()) : ?>
+                <div class="card-actions mt-3">
+                  <ul class="list-group list-group-horizontal mb-3">
+                    <li class="list-group-item"><a href="#" class="action">Disable</a></li>
+                    <li class="list-group-item"><a href="#" class="action">Approve</a></li>
+                    <li class="list-group-item"><a href="#collapse-<?= $message['id'] ?>" class="action" data-bs-toggle="collapse">Edit</a></li>
+                  </ul>
+                  <div class="collapse" id="collapse-<?= $message['id'] ?>">
+                    <form action="">
+                      <div class="form-floating mb-3">
+                        <textarea class="form-control" placeholder="Leave a comment here" id="message-<?= $message['id'] ?>" style="height: 100px;">
+                          <?= nl2br(htmlsc($message['text'])) ?>
+                        </textarea>
+                        <label for="message-<?= $message['id'] ?>">Comments</label>
+                      </div>
+                      <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                  </div>
+                </div>
+              <?php endif; ?>
             </div>
-          <?php endif; ?>
-        </div>
-      </div>
+          </div>
+        <?php endforeach; ?>
+      <?php else : ?>
+        <p class=" fs-3 fw-bold text-center text-decoration-underline mb-5">No messages to show!</p>
+      <?php endif; ?>
     </div>
   </div>
-  <div class="row">
+
+  <div class="row row-pagination">
     <div class="col-12">
       <nav aria-label="Page navigation example">
         <ul class="pagination">

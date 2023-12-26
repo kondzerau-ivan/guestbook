@@ -111,3 +111,15 @@ function saveMessage(array $data): bool
   $_SESSION['success'] = 'Message successfully added!';
   return true;
 }
+
+function getMessage(): array
+{
+  global $dbh;
+  $where = '';
+  if (!checkAdmin()) {
+    $where = 'WHERE status = 1';
+  }
+  $stmt = $dbh->prepare("SELECT * FROM messages {$where}");
+  $stmt->execute();
+  return $stmt->fetchAll();
+}
