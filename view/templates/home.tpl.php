@@ -47,8 +47,8 @@ require_once __DIR__ . '/header.tpl.php';
           <div class="card mb-5 <?= !$message['status'] ? 'border-danger' : '' ?>">
             <div class="card-body">
               <div class="d-flex justify-content-between">
-                <h5 class="card-title">User ID: <?= $message['user_id'] ?></h5>
-                <p class="message-created"><?= $message['created_at'] ?></p>
+                <h5 class="card-title"><?= $message['name'] ?></h5>
+                <p class="message-created"><?= $message['date'] ?></p>
               </div>
               <p class="card-text"><?= nl2br(htmlsc($message['text'])) ?></p>
               <?php if (checkAdmin()) : ?>

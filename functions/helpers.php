@@ -119,7 +119,7 @@ function getMessage(): array
   if (!checkAdmin()) {
     $where = 'WHERE status = 1';
   }
-  $stmt = $dbh->prepare("SELECT * FROM messages {$where}");
+  $stmt = $dbh->prepare("SELECT messages.*, DATE_FORMAT(messages.created_at, '%d.%m.%Y %H:%i') AS date, users.name FROM messages JOIN users ON users.id = messages.user_id {$where}");
   $stmt->execute();
   return $stmt->fetchAll();
 }
