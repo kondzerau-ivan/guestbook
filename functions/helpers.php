@@ -112,14 +112,25 @@ function saveMessage(array $data): bool
   return true;
 }
 
-function getMessage(): array
+function getMessage(int $start, int $per_page): array
 {
   global $dbh;
   $where = '';
   if (!checkAdmin()) {
     $where = 'WHERE status = 1';
   }
-  $stmt = $dbh->prepare("SELECT messages.*, DATE_FORMAT(messages.created_at, '%d.%m.%Y %H:%i') AS date, users.name FROM messages JOIN users ON users.id = messages.user_id {$where}");
+  $stmt = $dbh->prepare("SELECT messages.*, DATE_FORMAT(messages.created_at, '%d.%m.%Y %H:%i') AS date, users.name FROM messages JOIN users ON users.id = messages.user_id {$where} lIMIT {$start}, {$per_page}");
   $stmt->execute();
   return $stmt->fetchAll();
+}
+
+function getCountMessages(): int
+{
+  global $dbh;
+  $where = '';
+  if (!checkAdmin()) {
+    $where = 'WHERE status = 1';
+  }
+  $res = $dbh->query("SELECT COUNT(*) FROM messages {$where}");
+  return $res->fetchColumn();
 }
