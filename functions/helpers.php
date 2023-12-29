@@ -112,6 +112,20 @@ function saveMessage(array $data): bool
   return true;
 }
 
+function editMessage(array $data): bool
+{
+  global $dbh;
+  if (!checkAdmin()) {
+    $_SESSION['errors'] = 'Forbidden!';
+    return false;
+  }
+
+  $stmt = $dbh->prepare("UPDATE messages SET text = ? WHERE id = ?");
+  $stmt->execute([$data['message'], $data['id']]);
+  $_SESSION['success'] = 'Message successfully edited!';
+  return true;
+}
+
 function getMessage(int $start, int $per_page): array
 {
   global $dbh;
@@ -119,7 +133,7 @@ function getMessage(int $start, int $per_page): array
   if (!checkAdmin()) {
     $where = 'WHERE status = 1';
   }
-  $stmt = $dbh->prepare("SELECT messages.*, DATE_FORMAT(messages.created_at, '%d.%m.%Y %H:%i') AS date, users.name FROM messages JOIN users ON users.id = messages.user_id {$where} lIMIT {$start}, {$per_page}");
+  $stmt = $dbh->prepare("SELECT messages.*, DATE_FORMAT(messages.created_at, '%d.%m.%Y %H:%i') AS date, users.name FROM messages JOIN users ON users.id = messages.user_id {$where} ORDER BY messages.id DESC lIMIT {$start}, {$per_page}");
   $stmt->execute();
   return $stmt->fetchAll();
 }
@@ -133,4 +147,16 @@ function getCountMessages(): int
   }
   $res = $dbh->query("SELECT COUNT(*) FROM messages {$where}");
   return $res->fetchColumn();
+}
+
+function toggleMessageStatus(int $status, int $id): bool
+{
+  global $dbh;
+  if (!checkAdmin()) {
+    $_SESSION['errors'] = 'Forbidden';
+    return false;
+  }
+  $status = $status ? 1 : 0;
+  $stmt = $dbh->prepare("UPDATE messages SET status = ? WHERE id = ?");
+  return $stmt->execute([$status, $id]);
 }

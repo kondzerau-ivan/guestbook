@@ -43,7 +43,7 @@ require_once __DIR__ . '/header.tpl.php';
     <div class="col-12">
       <?php if (!empty($messages)) : ?>
         <?php foreach ($messages as $message) : ?>
-          <div class="card mb-5 <?= !$message['status'] ? 'border-danger' : '' ?>">
+          <div class="card mb-5 <?= !$message['status'] ? 'border-danger' : '' ?>" id="card-<?= $message['id'] ?>">
             <div class="card-body">
               <div class="d-flex justify-content-between">
                 <h5 class="card-title"><?= $message['name'] ?></h5>
@@ -53,19 +53,24 @@ require_once __DIR__ . '/header.tpl.php';
               <?php if (checkAdmin()) : ?>
                 <div class="card-actions mt-3">
                   <ul class="list-group list-group-horizontal mb-3">
-                    <li class="list-group-item"><a href="#" class="action">Disable</a></li>
-                    <li class="list-group-item"><a href="#" class="action">Approve</a></li>
+                    <?php if ($message['status'] == 1): ?>
+                    <li class="list-group-item"><a href="?page=<?= $page ?>&do=toggle-status&status=0&id=<?= $message['id']?>" class="action">Disable</a></li>
+                    <?php elseif ($message['status'] == 0): ?>
+                    <li class="list-group-item"><a href="?page=<?= $page ?>&do=toggle-status&status=1&id=<?= $message['id']?>" class="action">Approve</a></li>
+                    <?php endif ?>
                     <li class="list-group-item"><a href="#collapse-<?= $message['id'] ?>" class="action" data-bs-toggle="collapse">Edit</a></li>
                   </ul>
                   <div class="collapse" id="collapse-<?= $message['id'] ?>">
-                    <form action="">
+                    <form action="" method="post">
                       <div class="form-floating mb-3">
-                        <textarea class="form-control" placeholder="Leave a comment here" id="message-<?= $message['id'] ?>" style="height: 100px;">
+                        <textarea name="message" class="form-control" placeholder="Leave a comment here" id="message-<?= $message['id'] ?>" style="height: 100px;">
                           <?= nl2br(htmlsc($message['text'])) ?>
                         </textarea>
                         <label for="message-<?= $message['id'] ?>">Comments</label>
                       </div>
-                      <button type="submit" class="btn btn-primary">Submit</button>
+                      <input type="hidden" name="id" value="<?= $message['id'] ?>">
+                      <input type="hidden" name="page" value="<?= $_GET['page'] ?>">
+                      <button name="edit-message" type="submit" class="btn btn-primary">Submit</button>
                     </form>
                   </div>
                 </div>
